@@ -59,7 +59,9 @@ typedef struct DEV
 	int dataSize;
 	int registerSize;
 	int noofRegisters;
-	struct semaphore sem;
+//	struct semaphore sem;
+//	struct completion cmplsn;
+        wait_queue_head_t myqueue;
 }Dev;
 
 extern Dev *dev;

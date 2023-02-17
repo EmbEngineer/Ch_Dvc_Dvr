@@ -19,10 +19,10 @@ int trimDevice(Dev *devp)
 	        goto RET;
 	}
 
-	if(down_interruptible(&devp->sem))         // lock
+/*	if(down_interruptible(&devp->sem))         // lock
 	{
 		return -ERESTARTSYS;
-	}
+	}*/
 	while(devp->first)  // trim start from here 
 	{
 		slast = last = devp->first;
@@ -51,7 +51,7 @@ int trimDevice(Dev *devp)
 		else
 			slast->next = NULL;
 	}
-	up(&devp->sem);      // unlock
+//	up(&devp->sem);      // unlock
 RET:
 #ifdef DEBUG
         printk(KERN_INFO "%s: End\n",__func__);

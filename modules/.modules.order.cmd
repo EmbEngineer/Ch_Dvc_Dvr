@@ -1,1 +1,0 @@
-cmd_/home/amanp/Desktop/my_first_cdd/cdd_6th/modules.order := {   echo /home/amanp/Desktop/my_first_cdd/cdd_6th/mycdd.ko; :; } | awk '!x[$$0]++' - > /home/amanp/Desktop/my_first_cdd/cdd_6th/modules.order

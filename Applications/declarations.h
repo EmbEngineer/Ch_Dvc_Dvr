@@ -3,7 +3,7 @@
 #endif
 
 #ifndef NOF
-#define NOF 7
+#define NOF 4
 #endif
 
 
@@ -15,5 +15,5 @@ extern void* openDev(void *);
 extern void* releaseDev(void *);
 extern void* writeDev(void *);
 extern void* readDev(void *);
-extern void* ioctlDev(void *);
+
 extern void* (*fptr[NOF])(void *);                     

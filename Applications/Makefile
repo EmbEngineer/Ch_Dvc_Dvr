@@ -2,8 +2,8 @@
 
 CC=gcc
 CF=-c
-app: main.o init.o mainMenu.o exitFunc.o openDev.o releaseDev.o writeDev.o readDev.o ioctlDev.o
-	gcc -o app main.o init.o mainMenu.o exitFunc.o openDev.o releaseDev.o writeDev.o readDev.o ioctlDev.o
+app: main.o init.o mainMenu.o exitFunc.o openDev.o releaseDev.o writeDev.o readDev.o
+	gcc -o app main.o init.o mainMenu.o exitFunc.o openDev.o releaseDev.o writeDev.o readDev.o
 
 main.o: main.c headers.h declarations.h
 	$(CC) $(CF) main.c
@@ -21,8 +21,6 @@ writeDev.o: writeDev.c headers.h declarations.h
 	$(CC) $(CF) writeDev.c
 readDev.o: readDev.c headers.h declarations.h
 	$(CC) $(CF) readDev.c
-ioctlDev.o: ioctlDev.c headers.h declarations.h ../ioctl.h
-	$(CC) $(CF) ioctlDev.c
 
 
 clean:

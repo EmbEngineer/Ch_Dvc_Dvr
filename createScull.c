@@ -9,13 +9,7 @@ Qset* createScull(size_t size)
 #ifdef DEBUG
         printk(KERN_INFO "%s: Begin\n",__func__);
 #endif  
-
-        printk(KERN_INFO "%s: registerSize :- %d\n",__func__,registerSize);
-        printk(KERN_INFO "%s: noofRegisters :- %d\n",__func__,noofRegisters);
-        printk(KERN_INFO "%s: deviceSize :- %d\n",__func__,deviceSize);
-        printk(KERN_INFO "%s: dataSize :- %d\n",__func__,dataSize);
-
-
+	
 	items = size / (noofRegisters * registerSize);       
        	if(size % (noofRegisters * registerSize))
          	items++;

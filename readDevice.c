@@ -16,12 +16,6 @@ ssize_t readDevice(struct file *filep, char __user *u_buff, size_t size, loff_t 
                 goto OUT;
         }   
     
-	//ldev->dataSize > 0 -----> Not go in to sleep
-	//ldev->dataSize <= 0 -----> go in to sleep as nothing to raed 
-        wait_event_interruptible(ldev->myqueue,ldev->dataSize > 0); 
-//      if(ldev->dataSize == 0)
-//		wait_for_completion(&ldev->cmplsn);
-
         if(size > ldev->dataSize)
                 size= ldev->dataSize;
         else
@@ -31,11 +25,10 @@ ssize_t readDevice(struct file *filep, char __user *u_buff, size_t size, loff_t 
 	nocrd = i = 0;
 	lqset = ldev->first;
 	
-/*	if(down_interruptible(&ldev->sem))         // lock
+	if(down_interruptible(&ldev->sem))         // lock
         {
                 return -ERESTARTSYS;
-        }*/
-
+        }
 
 	while(size > 0)
         {
@@ -60,7 +53,7 @@ ssize_t readDevice(struct file *filep, char __user *u_buff, size_t size, loff_t 
                         i++;
 	}
 
-//	up(&ldev->sem);      // unlock
+	  up(&ldev->sem);      // unlock
 
 #ifdef DEBUG
         printk(KERN_INFO "%s: End\n",__func__);

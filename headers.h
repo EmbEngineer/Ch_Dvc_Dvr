@@ -5,10 +5,7 @@
 #include<linux/cdev.h>
 #include<linux/kernel.h>
 #include<linux/moduleparam.h>
-//#include<linux/semaphore.h>
-//#include<linux/completion.h>
-#include<linux/wait.h>
-#include<linux/sched.h>
+#include<linux/semaphore.h>
 
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Aman and Puja");

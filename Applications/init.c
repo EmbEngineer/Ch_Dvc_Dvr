@@ -5,11 +5,8 @@ void* mainMenu(void *);
 void* exitFunc(void *);
 void* openDev(void *);
 void* releaseDev(void *);
-void* writeDev(void *arg);
-void* readeDev(void *arg);
-void* ioctlDev(void *arg);
-
 void* (*fptr[NOF])(void *);
+
 int init(void )
 {
 #ifdef DEBUG
@@ -21,7 +18,6 @@ int init(void )
         fptr[3] = releaseDev;
         fptr[4] = writeDev;
         fptr[5] = readDev;
-        fptr[6] = ioctlDev;
 
 #ifdef DEBUG
 	printf("%s:End\n",__func__);

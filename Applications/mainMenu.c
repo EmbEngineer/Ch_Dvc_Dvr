@@ -26,7 +26,7 @@ void* mainMenu(void * arg)
        {			     
 	      ret = (*fptr[i+1])(NULL); 
        }
-       else if((i>=1) && (i<=5))    		  // other function
+       else if((i>=1) && (i<=4))    		  // other function
        {
 		(*fptr[i+1])(ret); 
        }

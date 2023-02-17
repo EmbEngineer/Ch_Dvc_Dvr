@@ -60,9 +60,7 @@ static int __init initDev(void)
         	dev[idx].registerSize = registerSize;
 		dev[idx].noofRegisters = noofRegisters;
 		devno = MKDEV(majorNo, idx);
-//        	sema_init(&dev[idx].sem, 1);                         //  initialize shemaphore
-//              init_completion(&dev[idx].cmplsn);
-                init_waitqueue_head(&dev[idx].myqueue);
+        	sema_init(&dev[idx].sem, 1);                         //  initialize shemaphore
 		ret = cdev_add(&dev[idx].c_dev, devno, nod);        //  added cdev to device table
         	if(ret == -1)
         	{

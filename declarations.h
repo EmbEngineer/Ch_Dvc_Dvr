@@ -59,9 +59,7 @@ typedef struct DEV
 	int dataSize;
 	int registerSize;
 	int noofRegisters;
-//	struct semaphore sem;
-//	struct completion cmplsn;
-        wait_queue_head_t myqueue;
+	struct semaphore sem;
 }Dev;
 
 extern Dev *dev;
@@ -71,5 +69,4 @@ int trimDevice(Dev *);
 ssize_t writeDevice(struct file *, const char __user *, size_t , loff_t *);
 ssize_t readDevice(struct file *, char __user *, size_t , loff_t *);
 Qset * createScull(size_t);
-long ioctlDevice(struct file*, unsigned int, unsigned long);
 

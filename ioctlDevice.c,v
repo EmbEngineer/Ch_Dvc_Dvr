@@ -1,0 +1,568 @@
+head	1.20;
+access;
+symbols;
+locks
+	root:1.20; strict;
+comment	@ * @;
+
+
+1.20
+date	2022.09.03.05.53.38;	author root;	state Exp;
+branches;
+next	1.19;
+
+1.19
+date	2022.09.03.05.45.54;	author root;	state Exp;
+branches;
+next	1.18;
+
+1.18
+date	2022.09.03.03.10.01;	author root;	state Exp;
+branches;
+next	1.17;
+
+1.17
+date	2022.08.30.17.22.16;	author root;	state Exp;
+branches;
+next	1.16;
+
+1.16
+date	2022.08.30.16.45.12;	author root;	state Exp;
+branches;
+next	1.15;
+
+1.15
+date	2022.08.30.15.29.06;	author root;	state Exp;
+branches;
+next	1.14;
+
+1.14
+date	2022.08.30.14.54.55;	author amanp;	state Exp;
+branches;
+next	1.13;
+
+1.13
+date	2022.08.30.14.13.01;	author amanp;	state Exp;
+branches;
+next	1.12;
+
+1.12
+date	2022.08.22.19.19.53;	author root;	state Exp;
+branches;
+next	1.11;
+
+1.11
+date	2022.08.22.19.18.04;	author root;	state Exp;
+branches;
+next	1.10;
+
+1.10
+date	2022.08.22.19.16.53;	author root;	state Exp;
+branches;
+next	1.9;
+
+1.9
+date	2022.08.22.19.11.09;	author root;	state Exp;
+branches;
+next	1.8;
+
+1.8
+date	2022.08.22.18.39.40;	author root;	state Exp;
+branches;
+next	1.7;
+
+1.7
+date	2022.08.22.18.37.26;	author root;	state Exp;
+branches;
+next	1.6;
+
+1.6
+date	2022.08.22.18.33.00;	author root;	state Exp;
+branches;
+next	1.5;
+
+1.5
+date	2022.08.22.16.33.21;	author root;	state Exp;
+branches;
+next	1.4;
+
+1.4
+date	2022.08.22.16.26.27;	author root;	state Exp;
+branches;
+next	1.3;
+
+1.3
+date	2022.08.22.16.25.25;	author root;	state Exp;
+branches;
+next	1.2;
+
+1.2
+date	2022.08.22.16.24.18;	author root;	state Exp;
+branches;
+next	1.1;
+
+1.1
+date	2022.08.22.16.14.25;	author root;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.20
+log
+@*** empty log message ***
+@
+text
+@#include "headers.h"
+#include "declarations.h"
+#include "ioctl.h"
+
+long ioctlDevice(struct file *filep, unsigned int command, unsigned long arg)
+{
+	Dev *ldev;
+        int ret;
+
+#ifdef DEBUG
+	printk(KERN_INFO "%s: Begin\n",__func__);
+#endif  
+
+	ldev = (Dev *)filep->private_data;
+        if(!ldev)
+	{
+		printk(KERN_ERR "%s: Device Not Found\n",__func__);
+	        goto OUT;
+	}
+
+	switch(command)
+	{
+		case DEVRESET:
+			if(access_ok((Dev *)ldev, sizeof(Dev)))
+                        {
+                                printk(KERN_INFO "%s: Access Denied\n",__func__);
+                                goto OUT;
+                        }
+                        else
+                        {
+	                        ret = trimDevice(ldev);
+				if(ret == -1)
+				{
+					printk(KERN_INFO "%s: Failled to trim\n",__func__);
+				        goto OUT;
+				}
+                                dataSize = ldev->dataSize = DATASIZE;
+                                registerSize = ldev->registerSize = REGISTERSIZE;
+                                noofRegisters = ldev->noofRegisters = NOOFREGISTER;
+                                deviceSize = ldev->deviceSize = DEVICESIZE;
+			}
+                        break;
+		case GETREGISTERSIZE:
+				printk(KERN_INFO "%s: GETREGISTERSIZE Command\n",__func__);
+				printk(KERN_INFO "%s: Register Size is %d\n",__func__,ldev->registerSize);
+				ret = put_user(ldev->registerSize, (int __user *)arg);
+				if(ret < 0)
+				{
+					printk(KERN_ERR "Error: put_user\n");
+				        goto OUT;
+				}
+			break;
+		case GETDEVICESIZE:
+				printk(KERN_INFO "%s: GETDEVICESIZE Command\n",__func__);
+				printk(KERN_INFO "%s: Device Size is %d\n",__func__,ldev->deviceSize);
+				ret = put_user(ldev->deviceSize, (int __user *)arg);
+				if(ret < 0)
+				{
+					printk(KERN_ERR "Error: put_user\n");
+				        goto OUT;
+				}
+			break;
+		case GETDATASIZE:
+				printk(KERN_INFO "%s: GETDATASIZE Command\n",__func__);
+				printk(KERN_INFO "%s: Data Size is %d\n",__func__,ldev->dataSize);
+				ret = put_user(ldev->dataSize, (int __user *)arg);
+				if(ret < 0)
+				{
+					printk(KERN_ERR "Error: put_user\n");
+				        goto OUT;
+				}
+			break;
+		case GETNOOFREGISTER:
+				printk(KERN_INFO "%s: GETNOOFREGISTER Command\n",__func__);
+				printk(KERN_INFO "%s: No of Registe %d\n",__func__,ldev->noofRegisters);
+				ret = put_user(ldev->noofRegisters, (int __user *)arg);
+				if(ret < 0)
+				{
+					printk(KERN_ERR "Error: put_user\n");
+				        goto OUT;
+				}
+			break;
+		case PUTREGISTERSIZE:
+				printk(KERN_INFO "%s: PUTREGISTERSIZE Command\n",__func__);
+	                        ret = trimDevice(ldev);
+				if(ret == -1)
+				{
+					printk(KERN_INFO "%s: Failled to trim\n",__func__);
+				        goto OUT;
+				}
+				ret = get_user(ldev->registerSize, (int __user *)arg);
+				if(ret < 0)
+				{
+					printk(KERN_ERR "Error: get_user\n");
+				        goto OUT;
+				}
+				registerSize = ldev->registerSize;
+				printk(KERN_INFO "%s: Register Size is %d\n",__func__,ldev->registerSize);
+			break;
+		case PUTDEVICESIZE:
+				printk(KERN_INFO "%s: PUTDEVICESIZE Command\n",__func__);
+	                        ret = trimDevice(ldev);
+				if(ret == -1)
+				{
+					printk(KERN_INFO "%s: Failled to trim\n",__func__);
+				        goto OUT;
+				}
+				ret = get_user(ldev->deviceSize, (int __user *)arg);
+				if(ret < 0)
+				{ 
+					printk(KERN_ERR "Error: get_user\n");
+				        goto OUT;
+				}
+				deviceSize = ldev->deviceSize;
+				printk(KERN_INFO "%s: Device Size is %d\n",__func__,ldev->deviceSize);
+			break;
+		case PUTDATASIZE:
+				printk(KERN_INFO "%s: PUTDATASIZE Command\n",__func__);
+	                /*      ret = trimDevice(ldev);
+				if(ret == -1)
+				{
+					printk(KERN_INFO "%s: Failled to trim\n",__func__);
+				        goto OUT;
+				}
+				ret = get_user(ldev->dataSize, (int __user *)arg);
+				if(ret < 0)
+				{
+					printk(KERN_ERR "Error: get_user\n");
+				        goto OUT;
+				}
+				dataSize = ldev->dataSize;            */
+				printk(KERN_INFO "%s: Data Size is %d\n",__func__,ldev->dataSize);
+				printk(KERN_INFO "%s: We Can't Change Data Size %d\n",__func__);
+			break;
+		case PUTNOOFREGISTER:
+				printk(KERN_INFO "%s: PUTNOOFREGISTER Command\n",__func__);
+	                        ret = trimDevice(ldev);
+				if(ret == -1)
+				{
+					printk(KERN_INFO "%s: Failled to trim\n",__func__);
+				        goto OUT;
+				}
+				ret = get_user(ldev->noofRegisters, (int __user *)arg);
+				if(ret < 0)
+				{
+					printk(KERN_ERR "Error: get_user\n");
+				        goto OUT;
+				}
+				noofRegisters = ldev->noofRegisters;
+				printk(KERN_INFO "%s: No of Registe %d\n",__func__,ldev->noofRegisters);
+			break;
+                default:
+                        printk(KERN_INFO "%s: Invalid Command\n",__func__);
+                       break;
+	}
+
+#ifdef DEBUG
+	printk(KERN_INFO "%s: End\n",__func__);
+#endif      
+	return 0;
+OUT:
+#ifdef DEBUG
+	printk(KERN_INFO "%s: ERROR: Error with End\n",__func__);
+#endif      
+	return -1;
+}
+@
+
+
+1.19
+log
+@*** empty log message ***
+@
+text
+@d119 1
+a119 1
+	                        ret = trimDevice(ldev);
+d131 1
+a131 1
+			//	dataSize = ldev->dataSize;
+@
+
+
+1.18
+log
+@*** empty log message ***
+@
+text
+@d97 1
+a97 1
+				ldev->registerSize = registerSize = arg;
+d114 1
+a114 1
+				ldev->deviceSize = deviceSize = arg;
+d131 1
+a131 1
+			//	ldev->dataSize = dataSize = arg;
+d149 1
+a149 1
+				ldev->noofRegisters = noofRegisters = arg;
+@
+
+
+1.17
+log
+@*** empty log message ***
+@
+text
+@d94 1
+a94 1
+					printk(KERN_ERR "Error: put_user\n");
+d111 1
+a111 1
+					printk(KERN_ERR "Error: put_user\n");
+d117 2
+a118 2
+/*		case PUTDATASIZE:
+				printk(KERN_INFO "%s: GETDATASIZE Command\n",__func__);
+d128 1
+a128 1
+					printk(KERN_ERR "Error: put_user\n");
+d131 1
+a131 1
+				ldev->dataSize = dataSize = arg;
+d133 1
+a134 1
+*/
+d146 1
+a146 1
+					printk(KERN_ERR "Error: put_user\n");
+@
+
+
+1.16
+log
+@*** empty log message ***
+@
+text
+@a30 4
+                                dataSize = ldev->dataSize = DATASIZE;
+                                registerSize = ldev->registerSize = REGISTERSIZE;
+                                noofRegisters = ldev->noofRegisters = NOOFREGISTER;
+                                deviceSize = ldev->deviceSize = DEVICESIZE;
+d37 4
+d82 69
+@
+
+
+1.15
+log
+@*** empty log message ***
+@
+text
+@d56 1
+a56 1
+				ret = put_user(ldev->registerSize, (int __user *)arg);
+d66 1
+a66 1
+				ret = put_user(ldev->registerSize, (int __user *)arg);
+d76 1
+a76 1
+				ret = put_user(ldev->registerSize, (int __user *)arg);
+@
+
+
+1.14
+log
+@*** empty log message ***
+@
+text
+@d55 1
+a55 1
+				printk(KERN_INFO "%s: Device Size is %d\n",__func__,ldev->registerSize);
+d65 1
+a65 1
+				printk(KERN_INFO "%s: Data Size is %d\n",__func__,ldev->registerSize);
+d75 1
+a75 1
+				printk(KERN_INFO "%s: No of Registe %d\n",__func__,ldev->registerSize);
+@
+
+
+1.13
+log
+@*** empty log message ***
+@
+text
+@d43 40
+@
+
+
+1.12
+log
+@*** empty log message ***
+@
+text
+@d23 1
+@
+
+
+1.11
+log
+@*** empty log message ***
+@
+text
+@d23 1
+a23 2
+		//	if(access_ok(ldev, sizeof(Dev)))
+			if(access_ok(VERIFY_WRITE,ldev, sizeof(Dev)))
+@
+
+
+1.10
+log
+@*** empty log message ***
+@
+text
+@d23 2
+a24 1
+			if(access_ok(ldev, sizeof(Dev)))
+@
+
+
+1.9
+log
+@*** empty log message ***
+@
+text
+@d8 1
+d23 1
+a23 1
+		if(access_ok(ldev, sizeof(Dev)))
+@
+
+
+1.8
+log
+@*** empty log message ***
+@
+text
+@d22 21
+a42 8
+                case DEVRESET:
+			dataSize = ldev->dataSize = DATASIZE;
+			registerSize = ldev->registerSize = REGISTERSIZE;
+			noofRegisters = ldev->noofRegisters = NOOFREGISTER;
+			deviceSize = ldev->deviceSize = DEVICESIZE;
+		       break;
+		default:
+			printk(KERN_INFO "%s: Invalid Command\n",__func__);
+@
+
+
+1.7
+log
+@*** empty log message ***
+@
+text
+@a7 1
+	int ret;
+d11 3
+a13 1
+#endif      
+d19 1
+@
+
+
+1.6
+log
+@*** empty log message ***
+@
+text
+@d3 1
+@
+
+
+1.5
+log
+@*** empty log message ***
+@
+text
+@d4 1
+a4 1
+long ioctlDevice(struct file*, unsigned int size, unsigned long arg)
+d6 3
+a8 2
+//	Dev *ldev;
+//	int ret;
+d12 17
+a28 8
+
+
+
+
+
+
+
+
+d34 1
+a34 1
+/*OUT:
+d38 1
+a38 1
+	return -1;*/
+@
+
+
+1.4
+log
+@*** empty log message ***
+@
+text
+@d4 1
+a4 1
+long ioctlDevice(struct file*, unsigned int, unsigned long)
+@
+
+
+1.3
+log
+@*** empty log message ***
+@
+text
+@d6 2
+a7 2
+	Dev *ldev;
+	int ret;
+@
+
+
+1.2
+log
+@*** empty log message ***
+@
+text
+@d4 1
+a4 1
+long ioctlDevice(struct file*, unsigned int, unsigned long);
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@d4 1
+a4 1
+long ioctlDevice(struct file*, unsigned int, unsigned lomg);
+@

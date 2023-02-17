@@ -1,0 +1,118 @@
+head	1.4;
+access;
+symbols;
+locks
+	root:1.4; strict;
+comment	@ * @;
+
+
+1.4
+date	2022.08.30.17.22.14;	author root;	state Exp;
+branches;
+next	1.3;
+
+1.3
+date	2022.08.30.14.54.54;	author amanp;	state Exp;
+branches;
+next	1.2;
+
+1.2
+date	2022.08.30.14.12.58;	author amanp;	state Exp;
+branches;
+next	1.1;
+
+1.1
+date	2022.08.22.16.14.25;	author root;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.4
+log
+@*** empty log message ***
+@
+text
+@#ifndef MAGIC
+#define MAGIC 'K'
+#endif
+
+
+#ifndef DEVRESET
+#define DEVRESET   _IO(MAGIC,0)
+#endif
+
+#ifndef GETREGISTERSIZE
+#define GETREGISTERSIZE   _IOR(MAGIC, 1, int)
+#endif
+
+#ifndef GETDEVICESIZE
+#define GETDEVICESIZE   _IOR(MAGIC, 2, int)
+#endif
+
+#ifndef GETDATASIZE
+#define GETDATASIZE   _IOR(MAGIC, 3, int)
+#endif
+
+#ifndef GETNOOFREGISTER
+#define GETNOOFREGISTER   _IOR(MAGIC, 4, int)
+#endif
+
+#ifndef PUTREGISTERSIZE
+#define PUTREGISTERSIZE   _IOW(MAGIC, 5, int)
+#endif
+
+#ifndef PUTDEVICESIZE
+#define PUTDEVICESIZE   _IOW(MAGIC, 6, int)
+#endif
+
+#ifndef PUTDATASIZE
+#define PUTDATASIZE   _IOW(MAGIC, 7, int)
+#endif
+
+#ifndef PUTNOOFREGISTER
+#define PUTNOOFREGISTER   _IOW(MAGIC, 8, int)
+#endif
+
+@
+
+
+1.3
+log
+@*** empty log message ***
+@
+text
+@d25 17
+@
+
+
+1.2
+log
+@*** empty log message ***
+@
+text
+@d11 1
+a11 1
+#define GETQUANTUMSIZE   _IOR(MAGIC, 1, int)
+d15 1
+a15 1
+#define GETQUANTUMSIZE   _IOR(MAGIC, 2, int)
+d19 1
+a19 1
+#define GETQUANTUMSIZE   _IOR(MAGIC, 3, int)
+d23 1
+a23 1
+#define GETQUANTUMSIZE   _IOR(MAGIC, 4, int)
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@d9 16
+@

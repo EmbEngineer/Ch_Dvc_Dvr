@@ -1,0 +1,108 @@
+head	1.5;
+access;
+symbols;
+locks
+	root:1.5; strict;
+comment	@ * @;
+
+
+1.5
+date	2022.08.12.22.16.55;	author root;	state Exp;
+branches;
+next	1.4;
+
+1.4
+date	2022.08.11.10.51.16;	author root;	state Exp;
+branches;
+next	1.3;
+
+1.3
+date	2022.08.11.10.50.15;	author root;	state Exp;
+branches;
+next	1.2;
+
+1.2
+date	2022.08.11.10.38.29;	author root;	state Exp;
+branches;
+next	1.1;
+
+1.1
+date	2022.07.25.13.25.22;	author amanp;	state Exp;
+branches;
+next	;
+
+
+desc
+@last exicutable function of driver
+@
+
+
+1.5
+log
+@addded kfree
+@
+text
+@#include "headers.h"
+#include "declarations.h"
+
+static void __exit cleanupDev(void)
+{
+	int idx;
+	printk(KERN_INFO "Bye for Now.....We will be back!\n");
+//      unregister_chrdev(MAJORNO, DEVNAME);
+        for(idx =0; idx<nod ; idx++)
+	{
+		cdev_del(&dev[idx].c_dev);         
+	}
+        kfree(dev);
+	unregister_chrdev_region(devid, nod);
+}
+
+module_exit(cleanupDev);
+
+@
+
+
+1.4
+log
+@typo
+@
+text
+@d13 2
+a14 1
+   	unregister_chrdev_region(devid, nod);
+@
+
+
+1.3
+log
+@typo
+@
+text
+@d11 1
+a11 1
+		cdev_del(&dev[i].c_dev);         
+@
+
+
+1.2
+log
+@*** empty log message ***
+@
+text
+@d9 1
+a9 1
+        for(idx =0; i<nod ; i++)
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@d6 1
+d9 5
+a13 1
+        unregister_chrdev_region(devid, nod);
+@

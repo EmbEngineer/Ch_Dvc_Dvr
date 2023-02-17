@@ -24,10 +24,10 @@ ssize_t writeDevice(struct file *filep, const char __user *u_buff, size_t size, 
 	else
 		lsize = size;
 
-	if(down_interruptible(&ldev->sem))         // lock
+/*	if(down_interruptible(&ldev->sem))         // lock
         {
                 return -ERESTARTSYS;
-        }
+        }*/
 
 	ldev->first = createScull(lsize);
 
@@ -59,10 +59,11 @@ ssize_t writeDevice(struct file *filep, const char __user *u_buff, size_t size, 
 	}	
 
        ldev->dataSize = nocwn;	
+//     filep->f_pos = *temp;
+       complete(&ldev->cmplsn);
 
-       up(&ldev->sem);      // unlock
+//     up(&ldev->sem);      // unlock
 
-       
 #ifdef DEBUG
         printk(KERN_INFO "%s: End\n",__func__);
 #endif
